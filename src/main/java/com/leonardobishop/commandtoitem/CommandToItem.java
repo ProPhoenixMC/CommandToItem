@@ -109,9 +109,14 @@ public class CommandToItem extends JavaPlugin {
     }
 
     private void executeVersionSpecificActions() {
+        String path = Bukkit.getServer().getClass().getPackage().getName();
         String version;
         try {
-            version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+            if (path.equals("org.bukkit.craftbukkit")) {
+                version = "v" + Bukkit.getServer().getBukkitVersion().split("-")[0].replace('.', '_');
+            } else {
+                version = path.replace(".", ",").split(",")[3];
+            }
         } catch (ArrayIndexOutOfBoundsException e) {
             getLogger().warning("Failed to resolve server version - some features will not work!");
             itemGetter = new ItemGetter_Late_1_8();
